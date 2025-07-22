@@ -1,13 +1,9 @@
-import Phaser from "phaser";
-import BootScene from "./scenes/BootScene";
-import MenuScene from "./scenes/MenuScene";
-import GameScene from "./scenes/GameScene";
-
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: "#1d1d1d",
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: "#1d1f21",
+  parent: "game-container", // optional if you're attaching to a div
   scene: [BootScene, MenuScene, GameScene],
   physics: {
     default: "arcade",
@@ -15,6 +11,8 @@ const config = {
       debug: false,
     },
   },
+  scale: {
+    mode: Phaser.Scale.RESIZE, // This makes it resize dynamically
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
 };
-
-new Phaser.Game(config);
