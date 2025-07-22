@@ -4,24 +4,24 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    // Background color
+    // Set background color
     this.cameras.main.setBackgroundColor("#0e0e0e");
 
-    // Loading Text
-    this.loadingText = this.add
-      .text(
-        this.cameras.main.width / 2,
-        this.cameras.main.height / 2 - 50,
-        "Loading...",
-        { font: "24px Arial", fill: "#ffffff" }
-      )
-      .setOrigin(0.5);
-
-    // Progress Bar Background
-    const barWidth = 300;
-    const barHeight = 20;
     const centerX = this.cameras.main.width / 2;
     const centerY = this.cameras.main.height / 2;
+
+    // Loading text
+    this.loadingText = this.add
+      .text(centerX, centerY - 50, "Loading...", {
+        fontFamily: "Arial",
+        fontSize: "24px",
+        color: "#ffffff",
+      })
+      .setOrigin(0.5);
+
+    // Progress bar box
+    const barWidth = 300;
+    const barHeight = 20;
 
     this.progressBox = this.add.graphics();
     this.progressBox.fillStyle(0x222222, 0.8);
@@ -32,10 +32,10 @@ export default class BootScene extends Phaser.Scene {
       barHeight
     );
 
-    // Progress Bar Fill
+    // Progress bar fill
     this.progressBar = this.add.graphics();
 
-    // Loading events
+    // Progress updating
     this.load.on("progress", (value) => {
       this.progressBar.clear();
       this.progressBar.fillStyle(0xffffff, 1);
@@ -47,19 +47,28 @@ export default class BootScene extends Phaser.Scene {
       );
     });
 
+    // Once loading completes
     this.load.on("complete", () => {
-      this.time.delayedCall(500, () => {
+      console.log("✅ BootScene: Assets loaded. Moving to MenuScene...");
+      this.time.delayedCall(300, () => {
         this.scene.start("MenuScene");
       });
     });
 
-    // Load assets
+    // Fallback if error loading asset
+    this.load.on("loaderror", (file) => {
+      console.error("❌ Error loading:", file.key);
+    });
+
+    // 🔽 Load essential assets here
     this.load.image("player", "assets/player.png");
-    this.load.image("background", "assets/map.png"); // example map
-    this.load.image("logo", "assets/logo.png"); // optional logo
+
+    // You can uncomment below if you have these assets
+    // this.load.image("background", "assets/map.png");
+    // this.load.image("logo", "assets/logo.png");
   }
 
   create() {
-    // (Nothing needed here since we use events)
+    console.log("✅ BootScene started");
   }
 }
